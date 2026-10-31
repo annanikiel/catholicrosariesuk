@@ -1,0 +1,98 @@
+name: Deploy AWS backend
+
+# Run it from the Actions tab: "Deploy AWS backend" > "Run workflow".
+# Needs (Settings > Secrets and variables > Actions):
+#   secret   AWS_ROLE_ARN     the RoleArn output of the one-time setup stack (backend/aws-setup.yaml)
+#   secret   OWNER_EMAIL      where contact form messages go
+#   variable FROM_ADDRESS     optional, e.g. Catholic Rosaries UK <hello@catholicrosaries.uk>
+#   variable ALLOWED_ORIGINS  optional, websites allowed to use the API (comma-separated)
+#   variable SITE_URL         optional, the site address used in email links. Defaults to the
+#                             GitHub Pages address; set to https://catholicrosaries.uk once the domain is live.
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # lets the workflow sign in to AWS without stored keys
+  contents: read
+
+concurrency:
+  group: backend-deploy
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: eu-west-2
+  STACK_NAME: catholic-rosaries-backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run tests first
+        run: npm ci && npm test
+
+      - name: Check required settings
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
+        run: |
+          missing=0
+          [ -n "$AWS_ROLE_ARN" ] || { echo "::error::Add the AWS_ROLE_ARN secret (see README)"; missing=1; }
+          [ -n "$OWNER_EMAIL" ] || { echo "::error::Add the OWNER_EMAIL secret (see README)"; missing=1; }
+          exit $missing
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: true
+
+      - name: Package and deploy
+        env:
+          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
+          FROM_ADDRESS: ${{ vars.FROM_ADDRESS || 'Catholic Rosaries UK <hello@catholicrosaries.uk>' }}
+          SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+          ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS || format('https://catholicrosaries.uk,https://www.catholicrosaries.uk,https://{0}.github.io', github.repository_owner) }}
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "::add-mask::$ACCOUNT_ID"
+          BUCKET="cruk-deploy-${ACCOUNT_ID}-${AWS_REGION}"
+
+          aws cloudformation package \
+            --template-file template.yaml \
+            --s3-bucket "$BUCKET" --s3-prefix backend \
+            --output-template-file packaged.yaml > /dev/null
+
+          aws cloudformation deploy \
+            --template-file packaged.yaml \
+            --stack-name "$STACK_NAME" \
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              "OwnerEmail=$OWNER_EMAIL" \
+              "SiteUrl=$SITE_URL" \
+              "FromAddress=$FROM_ADDRESS" \
+              "AllowedOrigins=$ALLOWED_ORIGINS"
+
+      - name: Show results
+        if: always()
+        run: |
+          {
+            echo "## Backend outputs"
+            echo ""
+            echo "| Name | Value |"
+            echo "| --- | --- |"
+            aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+              --query 'Stacks[0].Outputs[?OutputKey!=`FromAddress`].[OutputKey,OutputValue]' --output text \
+              | awk -F'\t' '{ printf "| %s | `%s` |\n", $1, $2 }'
+            echo ""
+            echo "Next: put **ApiUrl** in the API_BASE_URL repository variable, and add the three DKIM records to your DNS as CNAME records."
+          } >> "$GITHUB_STEP_SUMMARY" || echo "Stack not available yet."

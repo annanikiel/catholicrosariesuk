@@ -1,0 +1,64 @@
+name: Send newsletter
+
+# Run it from the Actions tab: "Send newsletter" > "Run workflow".
+# 1. Add two files to backend/newsletters/ on main: <name>.html and <name>.txt
+# 2. Run with "dry-run" (counts subscribers), then "test" (one copy to OWNER_EMAIL),
+#    then "send-to-everyone".
+# This repository is public, so the log never shows subscribers' email addresses.
+on:
+  workflow_dispatch:
+    inputs:
+      newsletter:
+        description: 'File name in backend/newsletters, without .html/.txt (e.g. 2026-12-advent)'
+        required: true
+      subject:
+        description: 'Email subject line'
+        required: true
+      mode:
+        description: 'What to do'
+        type: choice
+        options: [dry-run, test, send-to-everyone]
+        default: dry-run
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: newsletter
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+          mask-aws-account-id: true
+
+      - name: Send
+        env:
+          NAME: ${{ inputs.newsletter }}
+          SUBJECT: ${{ inputs.subject }}
+          MODE: ${{ inputs.mode }}
+          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
+        run: |
+          case "$NAME" in *[!A-Za-z0-9._-]*|"") echo "::error::Use only letters, numbers, dots, dashes and underscores in the file name"; exit 1;; esac
+          args=(--subject "$SUBJECT" --html "newsletters/$NAME.html" --text "newsletters/$NAME.txt")
+          case "$MODE" in
+            test) args+=(--to "$OWNER_EMAIL") ;;
+            send-to-everyone) args+=(--send) ;;
+          esac
+          node scripts/send-newsletter.mjs "${args[@]}"

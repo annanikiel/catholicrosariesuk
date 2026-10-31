@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Catholic Rosaries UK - one-time setup. Lets this GitHub repository's Actions
+  (on the main branch only) deploy the backend and send newsletters, without
+  storing any AWS keys in GitHub. Create this stack once, in the AWS console,
+  in the same region as the backend (eu-west-2, London).
+
+Parameters:
+  GitHubRepo:
+    Type: String
+    Default: annanikiel/catholicrosariesuk
+    Description: GitHub repository (owner/name) allowed to use this role.
+  BackendStackName:
+    Type: String
+    Default: catholic-rosaries-backend
+    Description: Name of the backend stack the workflow creates. Leave as is.
+  CreateGitHubConnection:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'true'
+    Description: >
+      Creates the GitHub sign-in provider (IAM > Identity providers >
+      token.actions.githubusercontent.com). Choose false only if your account already has it.
+
+Conditions:
+  ShouldCreateProvider: !Equals [!Ref CreateGitHubConnection, 'true']
+
+Resources:
+  GitHubOidcProvider:
+    Type: AWS::IAM::OIDCProvider
+    Condition: ShouldCreateProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList: [sts.amazonaws.com]
+
+  # Holds the zipped Lambda code during deploys. Old uploads are cleaned up after 30 days.
+  DeployBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub cruk-deploy-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-old-deploys
+            Status: Enabled
+            ExpirationInDays: 30
+
+  GitHubDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Used by GitHub Actions in the catholicrosariesuk repo (main branch only)
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                # Only workflows running on the main branch of this repository. Pull requests
+                # (including from forks) and other branches cannot use this role.
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubRepo}:ref:refs/heads/main
+      Policies:
+        - PolicyName: deploy-catholic-rosaries-backend
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: CloudFormationStack
+                Effect: Allow
+                Action: cloudformation:*
+                Resource:
+                  - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${BackendStackName}/*
+                  - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31
+              - Sid: CloudFormationRead
+                Effect: Allow
+                Action: [cloudformation:ValidateTemplate, cloudformation:GetTemplateSummary, cloudformation:ListStacks]
+                Resource: '*'
+              - Sid: DeployBucket
+                Effect: Allow
+                Action: [s3:PutObject, s3:GetObject, s3:ListBucket, s3:GetBucketLocation]
+                Resource:
+                  - !GetAtt DeployBucket.Arn
+                  - !Sub ${DeployBucket.Arn}/*
+              - Sid: LambdaFunctions
+                Effect: Allow
+                Action: lambda:*
+                Resource: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:${BackendStackName}-*
+              - Sid: LambdaRoles
+                Effect: Allow
+                Action:
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:GetRole
+                  - iam:UpdateRole
+                  - iam:UpdateAssumeRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:GetRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:ListRolePolicies
+                  - iam:ListAttachedRolePolicies
+                  - iam:TagRole
+                  - iam:UntagRole
+                  - iam:PassRole
+                Resource: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${BackendStackName}-*
+              - Sid: HttpApi
+                Effect: Allow
+                Action: apigateway:*
+                Resource:
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/apis
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/apis/*
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/tags/*
+              - Sid: SubscribersTable
+                Effect: Allow
+                Action: dynamodb:*
+                Resource: !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${BackendStackName}-*
+              - Sid: LogGroups
+                Effect: Allow
+                Action: logs:*
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${BackendStackName}-*
+              - Sid: LogGroupsDescribe
+                Effect: Allow
+                Action: logs:DescribeLogGroups
+                Resource: '*'
+              - Sid: SesIdentityAndSending
+                Effect: Allow
+                Action: ses:*
+                Resource: !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+              - Sid: SesRead
+                Effect: Allow
+                Action: [ses:ListEmailIdentities, ses:GetAccount]
+                Resource: '*'
+
+Outputs:
+  RoleArn:
+    Description: Save this as the AWS_ROLE_ARN secret in GitHub (Settings > Secrets and variables > Actions)
+    Value: !GetAtt GitHubDeployRole.Arn
+  DeployBucket:
+    Value: !Ref DeployBucket
