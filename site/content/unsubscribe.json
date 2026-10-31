@@ -1,0 +1,21 @@
+{
+  "meta": { "title": "Unsubscribe | Catholic Rosaries UK" },
+  "eyebrow": "Newsletter",
+  "endpoint": "/unsubscribe",
+  "action": {
+    "heading": "Unsubscribe from the *newsletter*",
+    "text": "Press the button below and I’ll remove your email address from the mailing list straight away.",
+    "button": "Unsubscribe"
+  },
+  "done": {
+    "heading": "You’ve been *unsubscribed*",
+    "text": "Your email address has been removed and you won’t receive any more newsletters. Thank you for being part of it. You’re always welcome back.",
+    "buttons": [
+      { "label": "Back to the website", "href": "./", "style": "dark" }
+    ]
+  },
+  "invalid": {
+    "heading": "Already *unsubscribed*",
+    "text": "This email address isn’t on the mailing list any more, so there’s nothing else to do. If you keep getting emails, please [let me know](./#contact)."
+  }
+}

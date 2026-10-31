@@ -1,0 +1,37 @@
+{
+  "siteName": "Catholic Rosaries UK",
+  "siteUrl": "https://catholicrosaries.uk",
+  "etsyUrl": "https://catholicrosariesuk.etsy.com",
+  "brand": {
+    "name": "CatholicRosaries",
+    "accent": ".uk"
+  },
+  "nav": [
+    { "label": "Mission", "href": "#mission" },
+    { "label": "What I make", "href": "#make" },
+    { "label": "Beads", "href": "#beads" },
+    { "label": "Medals", "href": "#medals" },
+    { "label": "Pray", "href": "#pray" },
+    { "label": "Contact", "href": "#contact" }
+  ],
+  "navButton": { "label": "Shop on Etsy", "href": "{etsy}" },
+  "footer": {
+    "copyright": "Catholic Rosaries UK. All rights reserved.",
+    "links": [
+      { "label": "Etsy", "href": "{etsy}" },
+      { "label": "Contact", "href": "#contact" },
+      { "label": "Privacy", "href": "privacy.html" }
+    ]
+  },
+  "forms": {
+    "sending": "Sending…",
+    "genericError": "Sorry, something went wrong and your form wasn’t sent. Please try again, or message me through Etsy.",
+    "linkError": "Sorry, something went wrong. Please try again in a moment.",
+    "errors": {
+      "invalid-email": "Please enter a valid email address.",
+      "invalid-name": "Please enter your name.",
+      "invalid-message": "Please write a message (up to 5,000 characters).",
+      "too-many-requests": "Lots of messages are coming in just now. Please try again in a few minutes."
+    }
+  }
+}

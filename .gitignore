@@ -3,3 +3,4 @@ node_modules/
 samconfig.toml
 .DS_Store
 backend/packaged.yaml
+_site/
