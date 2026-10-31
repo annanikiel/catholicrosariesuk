@@ -15,19 +15,19 @@
     "variants": [
       {
         "heading": "Find the *silence* in your heart, in the busyness of daily life.",
-        "lead": "Handmade, wire-linked rosaries made to come with you to work, on the commute and on the school run, so prayer is always within reach."
+        "lead": "There’s no need to wait for a quiet hour. One decade, prayed on the way to whatever comes next, is enough to turn the heart back to God."
       },
       {
         "heading": "A *quiet moment* with Our Lady, wherever the day takes you.",
-        "lead": "Rosaries wire-linked by hand in Manchester, made to slip into a pocket, a bag or the glovebox, ready for a decade whenever you have a minute."
+        "lead": "God is not only found in the quiet hours. He is in the office, the traffic and the kitchen too, and the Rosary is one way to meet Him there."
       },
       {
-        "heading": "*Pray* on the commute, the school run and the walk to work.",
-        "lead": "Rosaries made to be carried and used every day, not kept in a drawer. Each one is wire-linked by hand, bead by bead."
+        "heading": "Take *Our Lady* with you into the ordinary day.",
+        "lead": "At Nazareth she kept all these things in her heart, among the work of an ordinary home. Pray with her wherever your day takes you."
       },
       {
-        "heading": "Every bead, a *moment* to turn back to God.",
-        "lead": "Handmade rosaries for busy lives, so prayer is never more than a pocket away."
+        "heading": "*Pray* without ceasing.",
+        "lead": "St Paul’s counsel was never meant only for monks and nuns. For most of us it begins with a decade on the bus or a Hail Mary at the desk."
       }
     ]
   },
@@ -47,21 +47,21 @@
       {
         "heading": "Finding God in the *ordinary*",
         "intro": [
-          "The quiet moment we wait for rarely comes. There’s always another email, another errand, another school run. Being a contemplative in action means not waiting: praying in the middle of the day we actually have.",
-          "A rosary makes that easier. Keep one in your pocket or bag, and a decade fits into a train journey, a queue or the few minutes before you walk into work."
+          "Few of us are called to the cloister. Our days are taken up with work, family and the many small demands of ordinary life. To be a contemplative in action is to seek God there, in the thick of it, rather than waiting for a quiet hour that rarely comes.",
+          "The Rosary suits a life like that. It asks only for a few minutes and a willing heart, and a single decade can be prayed on the train or before a meeting. With the beads in hand, even a noisy day can hold a place for prayer."
         ]
       }
     ],
     "paragraphs": [
-      "[Your story: how you started making rosaries and what they mean to you. Two or three sentences in your own words.]",
-      "Each rosary is wire-linked by hand, bead by bead, so there’s no cord to fray or snap. They’re made to be used every day, not kept in a drawer."
+      "About four years ago, while running the piety shop at my parish, I grew tired of rosaries that came apart too easily and offered little beyond plastic beads and plain medals. Making my own began as a practical answer and became something I love. There is something in the patient work of closing each link that feels like prayer: small joins, one after another, holding the whole together. I hope each rosary helps someone come closer to the Lord.",
+      "St Teresa found the Lord among the pots and pans. These rosaries are made for that kind of life: linked with wire rather than cord, finished with care, and strong enough to stay with you for years."
     ]
   },
 
   "newsletter": {
     "eyebrow": "Newsletter",
-    "heading": "Be the first to see *new rosaries*",
-    "text": "New pieces, restocks and seasonal devotions, straight to your inbox. Unsubscribe any time.",
+    "heading": "Letters from the *workbench*",
+    "text": "Written a handful of times a year, each one with a reflection, a prayer and whatever I’ve been making. Subscribers sometimes find a small gift inside. Unsubscribe any time.",
     "label": "Email address",
     "placeholder": "you@example.com",
     "button": "Subscribe",
@@ -71,20 +71,20 @@
 
   "make": {
     "eyebrow": "What I make",
-    "heading": "Rosaries for every part of the day",
+    "heading": "*Rosaries* and keyrings.",
     "items": [
       {
         "title": "Five-decade rosaries",
         "dot": "#8E4DB8",
-        "text": "The full rosary: five decades of Hail Mary beads, Our Father beads between, a centre medal and crucifix.",
+        "text": "The traditional five-decade rosary, with a detailed centre medal and crucifix, for praying the mysteries in full.",
         "photo": null,
         "photoAlt": "",
         "placeholder": "Photo: five-decade rosary"
       },
       {
-        "title": "One-decade car rosaries",
+        "title": "Car tenners",
         "dot": "#2F8A63",
-        "text": "A single decade made for the car, so a prayer for the journey is always close by.",
+        "text": "A single decade with a clasp, to hang from the mirror, attach to steering wheel or keep in the glovebox.",
         "photo": null,
         "photoAlt": "",
         "placeholder": "Photo: one-decade car rosary"
@@ -92,7 +92,7 @@
       {
         "title": "Keychains",
         "dot": "#E8788A",
-        "text": "A decade on your keys or bag, so a moment of prayer is always close at hand.",
+        "text": "A few beads and a medal on a key ring, for your keys or the handle of a bag.",
         "photo": null,
         "photoAlt": "",
         "placeholder": "Photo: rosary keychain"
@@ -102,32 +102,32 @@
 
   "beads": {
     "eyebrow": "Beads",
-    "heading": "Beads made to be *held*",
-    "intro": "People have counted prayers on beads, seeds and knotted cord for centuries. The word rosary comes from the Latin *rosarium*, a rose garden. Today I work with materials chosen to last through years of daily use.",
+    "heading": "Stone, glass or *wood*",
+    "intro": "Beads have been used to count prayers for centuries. I choose materials that sit well in the hand and will last through years of use.",
     "items": [
       {
         "kind": "Gemstone",
         "title": "Agate",
         "swatches": ["#6E4A86", "#5C8A72", "#D99AA6"],
-        "text": "A banded form of quartz that builds up layer by layer over thousands of years, so no two beads are alike. It’s hard and scratch-resistant, one of the most durable stones for a rosary."
+        "text": "A banded quartz that forms slowly, layer on layer, so no two beads are quite alike. It’s hard and resists scratching, which makes it one of the most durable stones for a rosary."
       },
       {
         "kind": "Gemstone",
-        "title": "Ammonite",
+        "title": "Amazonite",
         "swatches": ["#7A5A44", "#A88566", "#D6C2A8"],
-        "text": "Polished fossil of a sea creature that lived millions of years ago, with the patterns of its shell still visible. It’s softer than agate, so it’s best kept away from keys and coins."
+        "text": "A green to blue-green stone, often with fine white streaks, so each bead has its own markings. It’s mined in places as far apart as Brazil, Russia and Madagascar."
       },
       {
         "kind": "Glass",
         "title": "Glass pearl",
         "swatches": ["#EDE6DE", "#E3D3CF", "#CFC6D6"],
-        "text": "A glass core with a pearl coating. Heavier and smoother than plastic, with a soft lustre. Keep away from perfume and cleaning products to protect the finish."
+        "text": "A solid glass core with a pearl finish, heavier and smoother than plastic, with a soft sheen. At this size the beads are tough and stand up well to everyday handling."
       },
       {
         "kind": "Wood",
         "title": "Wood",
         "swatches": ["#6B4630", "#9A6B4A", "#C49A72"],
-        "text": "One of the oldest materials for prayer beads. Light, warm and quiet in the hand, and it mellows with use. Keep it dry. More woods are coming soon."
+        "text": "The oldest and simplest material for prayer beads. It’s light and warm in the hand and mellows with use. Keep it dry. More woods to come."
       }
     ],
     "sizes": {
@@ -141,8 +141,8 @@
 
   "medals": {
     "eyebrow": "Medals",
-    "heading": "The medal at the heart of it",
-    "intro": "The centre medal joins the loop to the crucifix and is often the most personal part of a rosary.",
+    "heading": "Medals and *devotions*",
+    "intro": "Each medal carries a devotion of its own, with its own history and its own prayer. The one at the centre of a rosary often reflects something of the person who prays with it.",
     "items": [
       {
         "title": "The Miraculous Medal",
@@ -288,8 +288,8 @@
 
   "contact": {
     "eyebrow": "Contact",
-    "heading": "Ask me anything",
-    "text": "Questions about a rosary, a personalised piece or a gift? Send me a message and I’ll get back to you.",
+    "heading": "*Write* to me.",
+    "text": "Whether it’s a question about a rosary, a personalised piece or a gift for someone, send me a message and I’ll reply as soon as I can.",
     "nameLabel": "Name",
     "emailLabel": "Email",
     "messageLabel": "Message",
