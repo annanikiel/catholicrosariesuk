@@ -6,10 +6,22 @@ Description: >
   in the same region as the backend (eu-west-2, London).
 
 Parameters:
-  GitHubRepo:
+  GitHubOwner:
     Type: String
-    Default: annanikiel/catholicrosariesuk
-    Description: GitHub repository (owner/name) allowed to use this role.
+    Default: annanikiel
+    Description: GitHub account that owns the repository.
+  GitHubOwnerId:
+    Type: String
+    Default: '26003275'
+    Description: Permanent numeric ID of that GitHub account (shown in CloudTrail, or at https://api.github.com/users/<owner>).
+  GitHubRepoName:
+    Type: String
+    Default: catholicrosariesuk
+    Description: Repository name.
+  GitHubRepoId:
+    Type: String
+    Default: '1440789998'
+    Description: Permanent numeric ID of the repository (shown in CloudTrail, or at https://api.github.com/repos/<owner>/<repo>).
   BackendStackName:
     Type: String
     Default: catholic-rosaries-backend
@@ -70,7 +82,12 @@ Resources:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
                 # Only workflows running on the main branch of this repository. Pull requests
                 # (including from forks) and other branches cannot use this role.
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubRepo}:ref:refs/heads/main
+                # GitHub sends one of two formats: the newer one includes the account's and
+                # repository's permanent IDs, so a deleted-and-recreated repo with the same
+                # name would not be trusted.
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubOwner}@${GitHubOwnerId}/${GitHubRepoName}@${GitHubRepoId}:ref:refs/heads/main
+                  - !Sub repo:${GitHubOwner}/${GitHubRepoName}:ref:refs/heads/main
       Policies:
         - PolicyName: deploy-catholic-rosaries-backend
           PolicyDocument:

@@ -22,7 +22,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # If the API_BASE_URL repository variable is set (Settings > Secrets and variables > Actions > Variables),
       # write it into config.js so the forms talk to the AWS backend.
@@ -37,9 +37,9 @@ jobs:
             echo "API_BASE_URL not set; using site/config.js as committed."
           fi
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
