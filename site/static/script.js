@@ -2,8 +2,12 @@
 var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// Messages come from site/content/site.json ("forms"), written into the page when it's built.
+var TEXT = { errors: {} };
+try { TEXT = JSON.parse(document.getElementById('cruk-text').textContent); } catch (e) {}
+
 // Shared helper: POST JSON to the backend API.
-window.CRUK_API = function (path, data) {
+function apiPost(path, data) {
   var base = (window.CRUK_CONFIG && window.CRUK_CONFIG.apiBaseUrl || '').replace(/\/+$/, '');
   if (!base) return Promise.reject(new Error('not-configured'));
   return fetch(base + path, {
@@ -20,15 +24,7 @@ window.CRUK_API = function (path, data) {
       return body;
     });
   });
-};
-
-var ERROR_MESSAGES = {
-  'invalid-email': 'Please enter a valid email address.',
-  'invalid-name': 'Please enter your name.',
-  'invalid-message': 'Please write a message (up to 5,000 characters).',
-  'too-many-requests': 'Lots of messages are coming in just now. Please try again in a few minutes.'
-};
-var GENERIC_ERROR = 'Sorry, something went wrong and your form wasn’t sent. Please try again, or message me through Etsy.';
+}
 
 // Contact and newsletter forms.
 document.querySelectorAll('.js-api-form').forEach(function (form) {
@@ -36,11 +32,6 @@ document.querySelectorAll('.js-api-form').forEach(function (form) {
   var errorEl = form.querySelector('.form-error');
   var button = form.querySelector('button[type="submit"]');
   var buttonText = button.textContent;
-
-  function showError(text) {
-    errorEl.textContent = text;
-    errorEl.hidden = false;
-  }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -57,9 +48,9 @@ document.querySelectorAll('.js-api-form').forEach(function (form) {
     data.elapsedMs = Date.now() - startedAt; // bots submit instantly
 
     button.disabled = true;
-    button.textContent = 'Sending…';
+    button.textContent = TEXT.sending || 'Sending…';
 
-    window.CRUK_API(form.dataset.endpoint, data).then(function () {
+    apiPost(form.dataset.endpoint, data).then(function () {
       var msg = document.createElement('p');
       msg.className = 'form-success';
       msg.setAttribute('role', 'status');
@@ -70,7 +61,33 @@ document.querySelectorAll('.js-api-form').forEach(function (form) {
     }).catch(function (err) {
       button.disabled = false;
       button.textContent = buttonText;
-      showError(ERROR_MESSAGES[err.message] || GENERIC_ERROR);
+      errorEl.textContent = TEXT.errors[err.message] || TEXT.genericError || 'Sorry, something went wrong. Please try again.';
+      errorEl.hidden = false;
     });
   });
 });
+
+// Newsletter confirm and unsubscribe pages: post the ?e=...&t=... from the email link when the button is pressed.
+(function () {
+  var box = document.querySelector('[data-link-action]');
+  if (!box) return;
+  var params = new URLSearchParams(location.search);
+  var e = params.get('e'), t = params.get('t');
+  var done = document.getElementById('done');
+  var bad = document.getElementById('bad');
+  var errorEl = box.querySelector('.form-error');
+  var button = box.querySelector('button');
+  if (!e || !t) { box.hidden = true; bad.hidden = false; return; }
+  button.addEventListener('click', function () {
+    errorEl.hidden = true;
+    button.disabled = true;
+    apiPost(button.dataset.endpoint, { e: e, t: t }).then(function () {
+      box.hidden = true; done.hidden = false; done.focus();
+    }).catch(function (err) {
+      button.disabled = false;
+      if (err.status === 400 || err.status === 404) { box.hidden = true; bad.hidden = false; return; }
+      errorEl.textContent = TEXT.linkError || 'Sorry, something went wrong. Please try again in a moment.';
+      errorEl.hidden = false;
+    });
+  });
+})();

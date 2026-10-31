@@ -1,0 +1,306 @@
+{
+  "meta": {
+    "title": "Catholic Rosaries UK | Handmade rosaries",
+    "description": "Handmade, wire-linked rosaries made in Manchester. Find the silence in your heart, in the busyness of daily life."
+  },
+
+  "sectionOrder": ["hero", "mission", "newsletter", "make", "beads", "medals", "pray", "contact", "closing"],
+
+  "hero": {
+    "buttons": [
+      { "label": "See the rosaries on Etsy", "href": "{etsy}", "style": "dark" },
+      { "label": "Subscribe to the newsletter", "href": "#newsletter", "style": "blush" }
+    ],
+    "logoAlt": "Catholic Rosaries UK logo: Our Lady with eyes closed in prayer, surrounded by rose-pink rays",
+    "variants": [
+      {
+        "heading": "Find the *silence* in your heart, in the busyness of daily life.",
+        "lead": "Handmade, wire-linked rosaries made to come with you to work, on the commute and on the school run, so prayer is always within reach."
+      },
+      {
+        "heading": "A *quiet moment* with Our Lady, wherever the day takes you.",
+        "lead": "Rosaries wire-linked by hand in Manchester, made to slip into a pocket, a bag or the glovebox, ready for a decade whenever you have a minute."
+      },
+      {
+        "heading": "*Pray* on the commute, the school run and the walk to work.",
+        "lead": "Rosaries made to be carried and used every day, not kept in a drawer. Each one is wire-linked by hand, bead by bead."
+      },
+      {
+        "heading": "Every bead, a *moment* to turn back to God.",
+        "lead": "Handmade rosaries for busy lives, so prayer is never more than a pocket away."
+      }
+    ]
+  },
+
+  "mission": {
+    "eyebrow": "Mission",
+    "photo": null,
+    "photoAlt": "Anna, who makes the rosaries",
+    "variants": [
+      {
+        "heading": "Prayer in the middle of *everyday life*",
+        "intro": [
+          "Most of us don’t live in a monastery. Our days are full of work, family, traffic and noise. Being a contemplative in action means finding God there, in the middle of it all, rather than waiting for a quiet moment that never comes.",
+          "A rosary is a small, practical way to do that. It sits in a pocket or bag, and a single decade fits into a commute or the minutes before a meeting. With the beads in your hand, you can find that inner silence wherever you are."
+        ]
+      },
+      {
+        "heading": "Finding God in the *ordinary*",
+        "intro": [
+          "The quiet moment we wait for rarely comes. There’s always another email, another errand, another school run. Being a contemplative in action means not waiting: praying in the middle of the day we actually have.",
+          "A rosary makes that easier. Keep one in your pocket or bag, and a decade fits into a train journey, a queue or the few minutes before you walk into work."
+        ]
+      }
+    ],
+    "paragraphs": [
+      "[Your story: how you started making rosaries and what they mean to you. Two or three sentences in your own words.]",
+      "Each rosary is wire-linked by hand, bead by bead, so there’s no cord to fray or snap. They’re made to be used every day, not kept in a drawer."
+    ]
+  },
+
+  "newsletter": {
+    "eyebrow": "Newsletter",
+    "heading": "Be the first to see *new rosaries*",
+    "text": "New pieces, restocks and seasonal devotions, straight to your inbox. Unsubscribe any time.",
+    "label": "Email address",
+    "placeholder": "you@example.com",
+    "button": "Subscribe",
+    "note": "I’ll only use your email to send the newsletter. See the [privacy notice](privacy.html).",
+    "success": "Nearly there! Please check your inbox and click the link to confirm your subscription. God bless!"
+  },
+
+  "make": {
+    "eyebrow": "What I make",
+    "heading": "Rosaries for every part of the day",
+    "items": [
+      {
+        "title": "Five-decade rosaries",
+        "dot": "#8E4DB8",
+        "text": "The full rosary: five decades of Hail Mary beads, Our Father beads between, a centre medal and crucifix.",
+        "photo": null,
+        "photoAlt": "",
+        "placeholder": "Photo: five-decade rosary"
+      },
+      {
+        "title": "One-decade car rosaries",
+        "dot": "#2F8A63",
+        "text": "A single decade made for the car, so a prayer for the journey is always close by.",
+        "photo": null,
+        "photoAlt": "",
+        "placeholder": "Photo: one-decade car rosary"
+      },
+      {
+        "title": "Keychains",
+        "dot": "#E8788A",
+        "text": "A decade on your keys or bag, so a moment of prayer is always close at hand.",
+        "photo": null,
+        "photoAlt": "",
+        "placeholder": "Photo: rosary keychain"
+      }
+    ]
+  },
+
+  "beads": {
+    "eyebrow": "Beads",
+    "heading": "Beads made to be *held*",
+    "intro": "People have counted prayers on beads, seeds and knotted cord for centuries. The word rosary comes from the Latin *rosarium*, a rose garden. Today I work with materials chosen to last through years of daily use.",
+    "items": [
+      {
+        "kind": "Gemstone",
+        "title": "Agate",
+        "swatches": ["#6E4A86", "#5C8A72", "#D99AA6"],
+        "text": "A banded form of quartz that builds up layer by layer over thousands of years, so no two beads are alike. It’s hard and scratch-resistant, one of the most durable stones for a rosary."
+      },
+      {
+        "kind": "Gemstone",
+        "title": "Ammonite",
+        "swatches": ["#7A5A44", "#A88566", "#D6C2A8"],
+        "text": "Polished fossil of a sea creature that lived millions of years ago, with the patterns of its shell still visible. It’s softer than agate, so it’s best kept away from keys and coins."
+      },
+      {
+        "kind": "Glass",
+        "title": "Glass pearl",
+        "swatches": ["#EDE6DE", "#E3D3CF", "#CFC6D6"],
+        "text": "A glass core with a pearl coating. Heavier and smoother than plastic, with a soft lustre. Keep away from perfume and cleaning products to protect the finish."
+      },
+      {
+        "kind": "Wood",
+        "title": "Wood",
+        "swatches": ["#6B4630", "#9A6B4A", "#C49A72"],
+        "text": "One of the oldest materials for prayer beads. Light, warm and quiet in the hand, and it mellows with use. Keep it dry. More woods are coming soon."
+      }
+    ],
+    "sizes": {
+      "heading": "Bead sizes",
+      "items": [
+        { "dotSize": 18, "size": "6mm", "text": "slimmer and lighter. Sits neatly in a pocket." },
+        { "dotSize": 24, "size": "8mm", "text": "fuller in the hand and easier to count by touch." }
+      ]
+    }
+  },
+
+  "medals": {
+    "eyebrow": "Medals",
+    "heading": "The medal at the heart of it",
+    "intro": "The centre medal joins the loop to the crucifix and is often the most personal part of a rosary.",
+    "items": [
+      {
+        "title": "The Miraculous Medal",
+        "text": "Made to the design Our Lady gave St Catherine Labouré in 1830, with the prayer “O Mary, conceived without sin, pray for us who have recourse to thee.”",
+        "photo": null,
+        "photoAlt": ""
+      },
+      {
+        "title": "St Michael the Archangel",
+        "text": "Protector in spiritual battle, and patron of police, soldiers and the sick. A lovely gift of protection.",
+        "photo": null,
+        "photoAlt": ""
+      },
+      {
+        "title": "The Holy Face",
+        "text": "Shows the Face of Jesus as on Veronica’s veil, with the prayer “Let the light of your face shine upon us, O Lord.” A devotion of love and reparation to Christ.",
+        "photo": null,
+        "photoAlt": ""
+      }
+    ]
+  },
+
+  "pray": {
+    "eyebrow": "Devotions",
+    "heading": "Praying the Rosary",
+    "intro": "The Rosary walks through the life of Christ alongside Mary. Each decade has a mystery to reflect on as you pray. Pray all five decades, or just one when that’s all the day allows.",
+    "steps": {
+      "heading": "How to pray it",
+      "items": [
+        "On the crucifix, make the Sign of the Cross and say the Apostles’ Creed.",
+        "On the first bead, an Our Father. On the next three, a Hail Mary each, then a Glory Be.",
+        "Announce the first mystery, then pray an Our Father on the single bead.",
+        "Pray ten Hail Marys on the decade, then a Glory Be and the Fatima Prayer.",
+        "Repeat for the other four decades, and finish with the Hail, Holy Queen at the centre medal."
+      ]
+    },
+    "mysteries": {
+      "heading": "The mysteries, by day",
+      "items": [
+        {
+          "name": "Joyful",
+          "days": "Mon & Sat",
+          "dot": "#E8788A",
+          "list": ["The Annunciation", "The Visitation", "The Nativity", "The Presentation in the Temple", "The Finding of Jesus in the Temple"]
+        },
+        {
+          "name": "Sorrowful",
+          "days": "Tue & Fri",
+          "dot": "#8E4DB8",
+          "list": ["The Agony in the Garden", "The Scourging at the Pillar", "The Crowning with Thorns", "The Carrying of the Cross", "The Crucifixion"]
+        },
+        {
+          "name": "Glorious",
+          "days": "Wed & Sun",
+          "dot": "#E39A3B",
+          "list": ["The Resurrection", "The Ascension", "The Descent of the Holy Spirit", "The Assumption of Mary", "The Coronation of Mary"]
+        },
+        {
+          "name": "Luminous",
+          "days": "Thursday",
+          "dot": "#2F8A63",
+          "list": ["The Baptism of the Lord", "The Wedding at Cana", "The Proclamation of the Kingdom", "The Transfiguration", "The Institution of the Eucharist"]
+        }
+      ],
+      "note": "Your rosary can also be used for chaplets prayed on five decades, such as the Divine Mercy Chaplet."
+    },
+    "prayers": {
+      "heading": "The prayers",
+      "items": [
+        {
+          "title": "The Sign of the Cross",
+          "lines": ["In the name of the Father, and of the Son, and of the Holy Spirit. Amen."]
+        },
+        {
+          "title": "The Apostles’ Creed",
+          "lines": [
+            "I believe in God, the Father almighty, Creator of heaven and earth,",
+            "and in Jesus Christ, his only Son, our Lord,",
+            "who was conceived by the Holy Spirit, born of the Virgin Mary,",
+            "suffered under Pontius Pilate, was crucified, died and was buried;",
+            "he descended into hell; on the third day he rose again from the dead;",
+            "he ascended into heaven, and is seated at the right hand of God the Father almighty;",
+            "from there he will come to judge the living and the dead.",
+            "I believe in the Holy Spirit, the holy catholic Church,",
+            "the communion of saints, the forgiveness of sins,",
+            "the resurrection of the body, and life everlasting. Amen."
+          ]
+        },
+        {
+          "title": "Our Father",
+          "lines": [
+            "Our Father, who art in heaven, hallowed be thy name;",
+            "thy kingdom come, thy will be done on earth as it is in heaven.",
+            "Give us this day our daily bread,",
+            "and forgive us our trespasses, as we forgive those who trespass against us;",
+            "and lead us not into temptation, but deliver us from evil. Amen."
+          ]
+        },
+        {
+          "title": "Hail Mary",
+          "lines": [
+            "Hail Mary, full of grace, the Lord is with thee;",
+            "blessed art thou among women,",
+            "and blessed is the fruit of thy womb, Jesus.",
+            "Holy Mary, Mother of God, pray for us sinners,",
+            "now and at the hour of our death. Amen."
+          ]
+        },
+        {
+          "title": "Glory Be",
+          "lines": [
+            "Glory be to the Father, and to the Son, and to the Holy Spirit;",
+            "as it was in the beginning, is now, and ever shall be,",
+            "world without end. Amen."
+          ]
+        },
+        {
+          "title": "The Fatima Prayer",
+          "lines": [
+            "O my Jesus, forgive us our sins,",
+            "save us from the fires of hell;",
+            "lead all souls to heaven,",
+            "especially those in most need of thy mercy."
+          ]
+        },
+        {
+          "title": "Hail, Holy Queen",
+          "lines": [
+            "Hail, holy Queen, Mother of mercy, hail, our life, our sweetness and our hope.",
+            "To thee do we cry, poor banished children of Eve;",
+            "to thee do we send up our sighs, mourning and weeping in this vale of tears.",
+            "Turn then, most gracious advocate, thine eyes of mercy toward us,",
+            "and after this our exile show unto us the blessed fruit of thy womb, Jesus.",
+            "O clement, O loving, O sweet Virgin Mary.",
+            "",
+            "V. Pray for us, O holy Mother of God.",
+            "R. That we may be made worthy of the promises of Christ."
+          ]
+        }
+      ]
+    }
+  },
+
+  "contact": {
+    "eyebrow": "Contact",
+    "heading": "Ask me anything",
+    "text": "Questions about a rosary, a personalised piece or a gift? Send me a message and I’ll get back to you.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "button": "Send message",
+    "note": "Your details are used only to reply to you. See the [privacy notice](privacy.html).",
+    "success": "Thank you, your message is on its way. I’ll reply as soon as I can."
+  },
+
+  "closing": {
+    "heading": "Contemplatives *in action*",
+    "text": "A rosary in your pocket, a decade on the way to work. Find the one that comes everywhere with you.",
+    "button": { "label": "Visit the Etsy shop", "href": "{etsy}" }
+  }
+}

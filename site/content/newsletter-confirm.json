@@ -1,0 +1,22 @@
+{
+  "meta": { "title": "Confirm your subscription | Catholic Rosaries UK" },
+  "eyebrow": "Newsletter",
+  "endpoint": "/subscribe/confirm",
+  "action": {
+    "heading": "One last *step*",
+    "text": "Please confirm that you’d like to receive the Catholic Rosaries UK newsletter: new pieces, restocks and seasonal devotions. You can unsubscribe at any time.",
+    "button": "Confirm my subscription"
+  },
+  "done": {
+    "heading": "You’re *subscribed*",
+    "text": "Thank you for joining. I’ll be in touch when there are new rosaries to share. God bless!",
+    "buttons": [
+      { "label": "Back to the website", "href": "./", "style": "dark" },
+      { "label": "Visit the Etsy shop", "href": "{etsy}", "style": "blush" }
+    ]
+  },
+  "invalid": {
+    "heading": "This link *has expired*",
+    "text": "Confirmation links last for 7 days and can be used once. If you’ve already confirmed, you’re all set. Otherwise, please [sign up again](./#newsletter)."
+  }
+}

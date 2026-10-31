@@ -20,13 +20,9 @@ At this size it should cost little or nothing: Lambda, API Gateway and DynamoDB 
 
 | Path | What it is |
 | --- | --- |
-| `site/index.html` | The home page |
-| `site/styles.css` | All styles. Brand colours are CSS variables at the top. |
-| `site/script.js` | Sends the forms to the API, with "sending", success and error states |
-| `site/config.js` | The API address (`apiBaseUrl`) |
-| `site/privacy.html` | Privacy notice (has placeholders to fill in) |
-| `site/newsletter-confirm.html` | Page people land on from the "confirm your subscription" email |
-| `site/unsubscribe.html` | Page people land on from the unsubscribe link |
+| `site/content/*.json` | **All the website's text**: edit these to change the words (see "Editing the text" below) |
+| `site/static/` | Files published as they are: `styles.css` (brand colours are CSS variables at the top), `script.js` (form handling), `config.js` (API address) and `images/` |
+| `site/build/` | Turns the JSON into web pages. GitHub Actions runs it automatically. |
 | `backend/template.yaml` | AWS SAM template: the API, four Lambda functions, the DynamoDB table and the SES domain |
 | `backend/aws-setup.yaml` | One-time setup you upload in the CloudFormation console: lets GitHub Actions deploy to AWS |
 | `.github/workflows/` | Buttons in the Actions tab: deploy the website, deploy the backend, send a newsletter, run tests |
@@ -104,6 +100,48 @@ All of this is in the AWS console, under **Amazon SES** (still in eu-west-2).
 
 (GitHub's guide: <https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site>)
 
+## Editing the text
+
+Every word on the website lives in the JSON files in [`site/content/`](site/content/):
+
+| File | What it holds |
+| --- | --- |
+| `site.json` | Things on every page: Etsy link, menu, footer, form error messages |
+| `home.json` | The home page, section by section, and the order of the sections |
+| `privacy.json` | Privacy notice |
+| `newsletter-confirm.json`, `unsubscribe.json` | The pages people reach from links in emails |
+| `not-found.json` | The "page not found" page |
+
+**To edit on GitHub:** open the file, click the pencil icon, make your change and click **Commit changes**. The **Deploy website to GitHub Pages** workflow rebuilds the site, and it's live in about a minute.
+
+**If you make a mistake** (a missing comma, say), the workflow fails with a red ✗ and the live site stays as it was. Open the failed run to see which file and line to fix. Common slips:
+
+- Every item in a list or block needs a comma after it, **except the last one**.
+- Text goes inside straight double quotes: `"like this"`. For quotation marks *inside* text, use curly ones: `“like this”`. Apostrophes are fine either way, but `’` matches the rest of the site.
+
+**Formatting inside text:**
+
+- `*word*` → *italic*. Headings use this for the pink highlighted words.
+- `**word**` → **bold**
+- `[link text](https://example.com)` → a link. `{etsy}` anywhere in a link means your Etsy shop.
+- Text starting with `[` and with no link address, like `[Your story…]`, shows in pink as a reminder to fill it in.
+
+**Rotating text:** blocks with a `"variants"` list (the hero, Mission and closing sections) show one version at random on each visit, and never the same one twice in a row for the same visitor. Add, remove or edit versions freely; one version means it never changes. In Mission, each version's heading and intro paragraphs stay together, and `paragraphs` always shows underneath. To make the closing block rotate, give it a `"variants"` list of `heading` + `text` pairs.
+
+**Moving or hiding sections:** change `sectionOrder` at the top of `home.json`. Take a name out to hide that section. The menu links are in `site.json`.
+
+**Adding a photo:**
+
+1. Resize it first. About 1200px wide and under 200 KB is ideal; [Squoosh](https://squoosh.app) does this in the browser.
+2. Upload it to `site/static/images/` on GitHub (**Add file → Upload files**).
+3. In `home.json`, set the item's `"photo"` to the file's path, e.g. `"photo": "images/five-decade-agate.jpg"`, and describe it in `"photoAlt"` for people using screen readers, e.g. `"Five-decade rosary with purple agate beads and a Miraculous Medal"`.
+
+This works for the products in `make`, the medals, and your own photo in `mission` (shown as a circle under the heading).
+
+**Adding a product, bead type, medal, mystery or prayer:** copy one `{ … }` item in the list, paste it after the others, add a comma between them and change the words.
+
+The emails themselves (the "please confirm" email and contact form notifications) are in `backend/src/lib/emails.mjs`. Changing those needs a backend redeploy.
+
 ## Sending a newsletter
 
 1. On GitHub, open the `backend/newsletters` folder on `main` and use **Add file → Create new file** to make two files with the same name: e.g. `2026-12-advent.html` and `2026-12-advent.txt`. Copy `example.html` and `example.txt` to start from. Don't add an unsubscribe link: one is added to every email automatically, along with the headers that make Gmail and Outlook show their own Unsubscribe button.
@@ -132,25 +170,16 @@ Workflow logs on a public repository are public, so the script never prints anyo
 
 ## Developing
 
-- **Preview the site:** open `site/index.html` in a browser, or run `python3 -m http.server -d site 8080` and go to <http://localhost:8080>. To test the forms locally, add `http://localhost:8080` to the `ALLOWED_ORIGINS` variable, redeploy, and put the ApiUrl in `site/config.js`.
+- **Preview the site on your computer** (needs [Node.js](https://nodejs.org)): run `node site/build/build.mjs`, which builds into `_site/`, then `python3 -m http.server -d _site 8080` and go to <http://localhost:8080>. To test the forms locally, add `http://localhost:8080` to the `ALLOWED_ORIGINS` variable, redeploy the backend, and put the ApiUrl in `site/static/config.js`.
 - **Backend tests:** `cd backend && npm install && npm test`. They run against in-memory stand-ins for DynamoDB and SES, so no AWS account is needed. GitHub Actions runs them, plus `cfn-lint` on the template, on every push.
 - **Redeploy the backend** after changing it: **Actions → Deploy AWS backend → Run workflow**. If you prefer the command line, `sam deploy --guided --region eu-west-2 --stack-name catholic-rosaries-backend` from `backend/` also works.
 
 ## Still to do
 
-- [ ] Replace `[YOUR ETSY SHOP LINK]` everywhere (`site/*.html` and `backend/newsletters/example.*`). Search the files for `[`.
-- [ ] Mission section: `[Your story …]` in `site/index.html`.
-- [ ] Newsletter section: `[How often you’ll email …]` in `site/index.html`.
-- [ ] Privacy notice: fill in `[YOUR FULL NAME]`, `[YOUR CONTACT EMAIL]`, `[DATE]` and the contact message retention period in `site/privacy.html`. If you aren't already, [register with the ICO](https://ico.org.uk/for-organisations/data-protection-fee/) (most small businesses pay the lowest tier, and some are exempt).
-- [ ] **Photos:** swap each `.photo` / `.medal-photo` placeholder for an `<img>` (the CSS is ready). Keep each photo under about 200 KB (e.g. resize to 1200px wide with [Squoosh](https://squoosh.app)) and write meaningful alt text.
+- [ ] Mission section: replace `[Your story …]` in `site/content/home.json`.
+- [ ] Privacy notice: check the contact message retention period (`[2 years]`) in `site/content/privacy.json`. If you aren't already, [register with the ICO](https://ico.org.uk/for-organisations/data-protection-fee/) (most small businesses pay the lowest tier, and some are exempt).
+- [ ] **Photos:** products, medals and optionally one of you (see "Adding a photo" above).
 - [ ] Optional: self-host the two fonts instead of loading them from Google Fonts, so visitors' browsers don't connect to Google.
-
-## Adding content later
-
-- **New product:** copy an `<article class="card product">` block in `#make`. The grid wraps automatically.
-- **New bead type:** copy an `<article class="card stone">` block in `#beads`.
-- **New medal:** copy an `<article class="card medal">` block in `#medals`.
-- The mysteries and prayers use native `<details>` accordions. The shared `name` attribute means only one is open at a time.
 
 ## Brand
 
