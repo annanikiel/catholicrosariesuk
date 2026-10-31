@@ -91,7 +91,7 @@ const common = {
 
 if (args.to) {
   await sendEmail(buildEmail({ ...common, email: args.to, token: 'test-copy' }));
-  console.log(`Test copy sent to ${args.to}. (Its unsubscribe link is a dummy.)`);
+  console.log('Test copy sent. (Its unsubscribe link is a dummy.)');
   process.exit(0);
 }
 
@@ -104,13 +104,14 @@ if (!args.send) {
 
 let sent = 0;
 let failed = 0;
-for (const person of people) {
+// Email addresses are never printed: when this runs in GitHub Actions on a public repo, the log is public.
+for (const [i, person] of people.entries()) {
   try {
     await sendEmail(buildEmail({ ...common, ...person }));
     sent++;
   } catch (err) {
     failed++;
-    console.error(`Failed: ${person.email}: ${err.message}`);
+    console.error(`Failed: subscriber #${i + 1}: ${err.name}`);
   }
   await sleep(100); // stay well under SES's sending rate
 }
