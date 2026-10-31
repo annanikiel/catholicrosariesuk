@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm your subscription | Catholic Rosaries UK</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="container nav" aria-label="Main">
+    <a href="index.html" class="brand">
+      <img src="images/logo-160.png" alt="" width="40" height="50">
+      <span>CatholicRosaries<span class="accent">.uk</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="[YOUR ETSY SHOP LINK]" class="btn btn-pink btn-sm">Shop on Etsy</a>
+    </div>
+  </nav>
+</header>
+
+<main class="page">
+  <p class="eyebrow">Newsletter</p>
+  <div id="action">
+    <h1>One last <em>step</em></h1>
+    <p>Please confirm that you’d like to receive the Catholic Rosaries UK newsletter: new pieces, restocks and seasonal devotions. You can unsubscribe at any time.</p>
+    <p class="form-error" role="alert" hidden></p>
+    <div class="btn-row"><button type="button" class="btn btn-dark" data-endpoint="/subscribe/confirm">Confirm my subscription</button></div>
+  </div>
+  <div id="done" hidden tabindex="-1">
+    <h1>You’re <em>subscribed</em></h1>
+    <p>Thank you for joining. I’ll be in touch when there are new rosaries to share. God bless!</p>
+    <div class="btn-row"><a href="index.html" class="btn btn-dark">Back to the website</a><a href="[YOUR ETSY SHOP LINK]" class="btn btn-blush">Visit the Etsy shop</a></div>
+  </div>
+  <div id="bad" hidden>
+    <h1>This link <em>has expired</em></h1>
+    <p>Confirmation links last for 7 days and can be used once. If you’ve already confirmed, you’re all set. Otherwise, please <a href="index.html#newsletter">sign up again</a>.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year">2026</span> Catholic Rosaries UK. All rights reserved.</span>
+    <span><a href="[YOUR ETSY SHOP LINK]">Etsy</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+// Reads ?e=...&t=... from the link in the email and posts it to the API when the button is pressed.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var e = params.get('e'), t = params.get('t');
+  var box = document.getElementById('action');
+  var done = document.getElementById('done');
+  var bad = document.getElementById('bad');
+  var errorEl = box.querySelector('.form-error');
+  var button = box.querySelector('button');
+  if (!e || !t) { box.hidden = true; bad.hidden = false; return; }
+  button.addEventListener('click', function () {
+    errorEl.hidden = true;
+    button.disabled = true;
+    window.CRUK_API(button.dataset.endpoint, { e: e, t: t }).then(function () {
+      box.hidden = true; done.hidden = false; done.focus();
+    }).catch(function (err) {
+      button.disabled = false;
+      if (err.status === 400 || err.status === 404) { box.hidden = true; bad.hidden = false; return; }
+      errorEl.textContent = 'Sorry, something went wrong. Please try again in a moment.';
+      errorEl.hidden = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>

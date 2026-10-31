@@ -1,0 +1,16 @@
+{
+  "name": "catholic-rosaries-backend",
+  "private": true,
+  "type": "module",
+  "description": "Serverless contact form and newsletter for CatholicRosaries.uk",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "newsletter": "node scripts/send-newsletter.mjs"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cloudformation": "^3.700.0",
+    "@aws-sdk/client-dynamodb": "^3.700.0",
+    "@aws-sdk/client-sesv2": "^3.700.0"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -1,0 +1,220 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Catholic Rosaries UK - serverless backend for the website's contact form and
+  double opt-in newsletter sign-up (API Gateway HTTP API + Lambda + DynamoDB + SES).
+
+Parameters:
+  SiteUrl:
+    Type: String
+    Default: https://catholicrosaries.uk
+    Description: Public URL of the website. Used to build the confirm and unsubscribe links in emails.
+  AllowedOrigins:
+    Type: CommaDelimitedList
+    Default: https://catholicrosaries.uk,https://www.catholicrosaries.uk
+    Description: >
+      Websites allowed to call the API from the browser (CORS). Add your GitHub Pages
+      address (e.g. https://<user>.github.io) while testing before the domain is live.
+  OwnerEmail:
+    Type: String
+    Description: Where contact form messages are delivered (your own inbox).
+  FromAddress:
+    Type: String
+    Default: Catholic Rosaries UK <hello@catholicrosaries.uk>
+    Description: Sender for all emails. Must be on the SES-verified domain below.
+  SesDomain:
+    Type: String
+    Default: catholicrosaries.uk
+    Description: Domain you send email from.
+  CreateSesIdentity:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'true'
+    Description: >
+      Create the SES domain identity (with DKIM) in this stack. Set to false if you
+      have already verified the domain in SES yourself.
+
+Conditions:
+  ShouldCreateSesIdentity: !Equals [!Ref CreateSesIdentity, 'true']
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Architectures: [arm64]
+    MemorySize: 256
+    Timeout: 10
+    CodeUri: src/
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref SubscribersTable
+        FROM_ADDRESS: !Ref FromAddress
+        OWNER_EMAIL: !Ref OwnerEmail
+        SITE_URL: !Ref SiteUrl
+        NODE_OPTIONS: --enable-source-maps
+
+Resources:
+  # ---------- Storage ----------
+  SubscribersTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      # Unconfirmed sign-ups carry an expiresAt and are deleted automatically.
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+  # ---------- Email ----------
+  SesDomainIdentity:
+    Type: AWS::SES::EmailIdentity
+    Condition: ShouldCreateSesIdentity
+    Properties:
+      EmailIdentity: !Ref SesDomain
+
+  # ---------- API ----------
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: !Ref AllowedOrigins
+        AllowMethods: [POST, OPTIONS]
+        AllowHeaders: [content-type]
+        MaxAge: 600
+      # Keeps costs and abuse in check. A small shop never needs more than this.
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 10
+        ThrottlingRateLimit: 5
+
+  ContactFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: contact.handler
+      Description: Emails contact form messages to the owner
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource:
+                - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+      Events:
+        Post:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /contact
+
+  SubscribeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: subscribe.handler
+      Description: Newsletter sign-up, step 1 (stores pending subscriber, sends confirmation email)
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem]
+              Resource: !GetAtt SubscribersTable.Arn
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource:
+                - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+      Events:
+        Post:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /subscribe
+
+  ConfirmFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: confirm.handler
+      Description: Newsletter sign-up, step 2 (confirms the subscription)
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:UpdateItem]
+              Resource: !GetAtt SubscribersTable.Arn
+      Events:
+        Post:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /subscribe/confirm
+
+  UnsubscribeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: unsubscribe.handler
+      Description: Removes a subscriber (unsubscribe page and one-click email header)
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:DeleteItem]
+              Resource: !GetAtt SubscribersTable.Arn
+      Events:
+        Post:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /unsubscribe
+
+  # Keep logs for 30 days only (they can contain IP addresses).
+  ContactLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ContactFunction}
+      RetentionInDays: 30
+  SubscribeLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${SubscribeFunction}
+      RetentionInDays: 30
+  ConfirmLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ConfirmFunction}
+      RetentionInDays: 30
+  UnsubscribeLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${UnsubscribeFunction}
+      RetentionInDays: 30
+
+Outputs:
+  ApiUrl:
+    Description: Put this in site/config.js (or the API_BASE_URL GitHub repository variable)
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}
+  TableName:
+    Description: DynamoDB table holding newsletter subscribers
+    Value: !Ref SubscribersTable
+  FromAddress:
+    Value: !Ref FromAddress
+  SiteUrl:
+    Value: !Ref SiteUrl
+  DkimRecord1:
+    Condition: ShouldCreateSesIdentity
+    Description: Add this CNAME record at your domain registrar (name -> value)
+    Value: !Sub '${SesDomainIdentity.DkimDNSTokenName1} -> ${SesDomainIdentity.DkimDNSTokenValue1}'
+  DkimRecord2:
+    Condition: ShouldCreateSesIdentity
+    Description: Add this CNAME record at your domain registrar (name -> value)
+    Value: !Sub '${SesDomainIdentity.DkimDNSTokenName2} -> ${SesDomainIdentity.DkimDNSTokenValue2}'
+  DkimRecord3:
+    Condition: ShouldCreateSesIdentity
+    Description: Add this CNAME record at your domain registrar (name -> value)
+    Value: !Sub '${SesDomainIdentity.DkimDNSTokenName3} -> ${SesDomainIdentity.DkimDNSTokenValue3}'
