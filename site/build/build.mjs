@@ -9,6 +9,7 @@ import { readFile, writeFile, cp, rm, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { ctx, esc, md, href, sections, privacyBody, linkActionBody, notFoundBody } from './render.mjs';
+import { buildMap } from './map.mjs';
 
 const siteDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.resolve(siteDir, '..', '_site');
@@ -84,6 +85,11 @@ window.cruk = { chosen: {}, pick: function (box) {
     this.chosen[group] = i;
   }
   for (var k = 0; k < n; k++) items[k].hidden = k !== i;
+}, pickSome: function (box, count) {
+  // Shows a few random items out of all of them (used for reviews).
+  var items = [].slice.call(box.children).filter(function (el) { return el.tagName !== 'SCRIPT'; });
+  for (var i = items.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = items[i]; items[i] = items[j]; items[j] = t; }
+  items.forEach(function (el, k) { el.hidden = k >= count; box.appendChild(el); });
 } };
 </script>
 </head>
@@ -129,6 +135,12 @@ async function build() {
   const unsubscribe = await readJson('unsubscribe.json');
   const notFound = await readJson('not-found.json');
   ctx.site = site;
+  ctx.reviews = await readJson('reviews.json');
+  ctx.map = await buildMap(await readJson('orders-map.json'));
+  for (const w of ctx.map.warnings) {
+    console.warn(`! ${w}`);
+    if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Map place skipped::${w}`);
+  }
 
   const pages = {};
 

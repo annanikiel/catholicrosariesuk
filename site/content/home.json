@@ -4,7 +4,7 @@
     "description": "Handmade, wire-linked rosaries made in Manchester. Find the silence in your heart, in the busyness of daily life."
   },
 
-  "sectionOrder": ["hero", "mission", "newsletter", "make", "beads", "medals", "pray", "contact", "closing"],
+  "sectionOrder": ["hero", "mission", "newsletter", "make", "reviews", "beads", "medals", "map", "pray", "contact", "closing"],
 
   "hero": {
     "buttons": [
@@ -98,6 +98,25 @@
         "placeholder": "Photo: rosary keychain"
       }
     ]
+  },
+
+  "reviews": {
+    "eyebrow": "Reviews",
+    "heading": "Kind words from *Etsy*",
+    "show": 3,
+    "button": { "label": "Read all reviews on Etsy", "href": "{etsy}" }
+  },
+
+  "map": {
+    "eyebrow": "Around the world",
+    "heading": "Where the rosaries *have gone*",
+    "intro": "Every dot is a town or city where one of my rosaries is now being prayed. Drag to move around, and use the buttons to zoom in.",
+    "summary": "So far: {cities} places in {countries} countries.",
+    "listLabel": "See the list of places",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "reset": "Show the whole world",
+    "credit": "Map: [Natural Earth](https://www.naturalearthdata.com). Places: [GeoNames](https://www.geonames.org) (CC BY 4.0)."
   },
 
   "beads": {

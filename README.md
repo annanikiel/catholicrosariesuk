@@ -22,7 +22,7 @@ At this size it should cost little or nothing: Lambda, API Gateway and DynamoDB 
 | --- | --- |
 | `site/content/*.json` | **All the website's text**: edit these to change the words (see "Editing the text" below) |
 | `site/static/` | Files published as they are: `styles.css` (brand colours are CSS variables at the top), `script.js` (form handling), `config.js` (API address) and `images/` |
-| `site/build/` | Turns the JSON into web pages. GitHub Actions runs it automatically. |
+| `site/build/` | Turns the JSON into web pages. GitHub Actions runs it automatically. `build/data/places.json` is the city list for the map, from [GeoNames](https://www.geonames.org) (CC BY 4.0). |
 | `backend/template.yaml` | AWS SAM template: the API, four Lambda functions, the DynamoDB table and the SES domain |
 | `backend/aws-setup.yaml` | One-time setup you upload in the CloudFormation console: lets GitHub Actions deploy to AWS |
 | `.github/workflows/` | Buttons in the Actions tab: deploy the website, deploy the backend, send a newsletter, run tests |
@@ -128,6 +128,21 @@ Every word on the website lives in the JSON files in [`site/content/`](site/cont
 
 **Rotating text:** blocks with a `"variants"` list (the hero, Mission and closing sections) show one version at random on each visit, and never the same one twice in a row for the same visitor. Add, remove or edit versions freely; one version means it never changes. In Mission, each version's heading and intro paragraphs stay together, and `paragraphs` always shows underneath. To make the closing block rotate, give it a `"variants"` list of `heading` + `text` pairs.
 
+**Reviews** are in `reviews.json`. Paste each Etsy review as a new `{ … }` block with `text`, `name`, `stars` (1–5), and optionally `product` and `date`. The page shows 3 at random on each visit; change `"show"` in the `reviews` block of `home.json` to show more or fewer. For buyers' privacy, use first names only, e.g. `"Maria"` or `"Maria K."`.
+
+**The map** is built from `orders-map.json`. Add a line for each place a rosary has gone:
+
+```json
+{ "city": "Melbourne", "country": "Australia" },
+```
+
+- The build finds the coordinates itself from a list of about 34,000 towns and cities (all places with more than 15,000 people).
+- If a city appears more than once, it's shown as one dot, so adding a line for every order is fine.
+- Use English country names. `UK`, `England`, `Scotland`, `USA` and so on all work.
+- If two places share a name, add the state or county, e.g. `{ "city": "Portland", "country": "USA", "region": "Maine" }`. Otherwise the bigger one is used.
+- For a small place the list doesn't know, add its coordinates: `{ "city": "Little Snoring", "country": "UK", "lat": 52.86, "lng": 0.91 }`. In Google Maps, right-click the place and click the numbers at the top of the menu to copy them.
+- If a place can't be found, the site still publishes without it, and the workflow run shows a yellow warning that names it and says why.
+
 **Moving or hiding sections:** change `sectionOrder` at the top of `home.json`. Take a name out to hide that section. The menu links are in `site.json`.
 
 **Adding a photo:**
@@ -170,7 +185,7 @@ Workflow logs on a public repository are public, so the script never prints anyo
 
 ## Developing
 
-- **Preview the site on your computer** (needs [Node.js](https://nodejs.org)): run `node site/build/build.mjs`, which builds into `_site/`, then `python3 -m http.server -d _site 8080` and go to <http://localhost:8080>. To test the forms locally, add `http://localhost:8080` to the `ALLOWED_ORIGINS` variable, redeploy the backend, and put the ApiUrl in `site/static/config.js`.
+- **Preview the site on your computer** (needs [Node.js](https://nodejs.org)): run `npm ci --prefix site` once, then `node site/build/build.mjs`, which builds into `_site/`, then `python3 -m http.server -d _site 8080` and go to <http://localhost:8080>. To test the forms locally, add `http://localhost:8080` to the `ALLOWED_ORIGINS` variable, redeploy the backend, and put the ApiUrl in `site/static/config.js`.
 - **Backend tests:** `cd backend && npm install && npm test`. They run against in-memory stand-ins for DynamoDB and SES, so no AWS account is needed. GitHub Actions runs them, plus `cfn-lint` on the template, on every push.
 - **Redeploy the backend** after changing it: **Actions → Deploy AWS backend → Run workflow**. If you prefer the command line, `sam deploy --guided --region eu-west-2 --stack-name catholic-rosaries-backend` from `backend/` also works.
 

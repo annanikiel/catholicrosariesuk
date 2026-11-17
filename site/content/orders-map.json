@@ -1,0 +1,11 @@
+{
+  "places": [
+    { "city": "Manchester", "country": "United Kingdom" },
+    { "city": "London", "country": "United Kingdom" },
+    { "city": "Dublin", "country": "Ireland" },
+    { "city": "Kraków", "country": "Poland" },
+    { "city": "Boston", "country": "USA", "region": "Massachusetts" },
+    { "city": "Melbourne", "country": "Australia" },
+    { "city": "Manchester", "country": "United Kingdom" }
+  ]
+}

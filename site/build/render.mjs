@@ -4,7 +4,7 @@ export const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 // Rendering context: set once per page by build.mjs.
-export const ctx = { site: null, isHome: false };
+export const ctx = { site: null, isHome: false, reviews: null, map: null };
 
 // Link targets in the JSON can be:
 //   "{etsy}"        the Etsy shop link from site.json
@@ -210,6 +210,62 @@ export const sections = {
     </div>
   </div>
 </section>`,
+
+  reviews: (s) => {
+    const items = (ctx.reviews?.items || []).filter((r) => r && r.text);
+    const show = Math.max(1, Number(s.show) || 3);
+    const stars = (n) => {
+      const k = Math.max(0, Math.min(5, Math.round(Number(n) || 5)));
+      return `<p class="stars" role="img" aria-label="${k} out of 5 stars">${'<span>★</span>'.repeat(k)}${'<span class="off">★</span>'.repeat(5 - k)}</p>`;
+    };
+    const meta = (r) => [r.product, r.date].filter((x) => x && !String(x).startsWith('[')).map(md).join(' · ');
+    return `
+<section id="reviews" class="container section">
+  <p class="eyebrow">${md(s.eyebrow)}</p>
+  <h2>${md(s.heading)}</h2>
+  ${s.intro ? `<p class="intro">${md(s.intro)}</p>` : ''}
+  <div class="grid grid-300 reviews"${items.length > show ? ` data-pick-some="${show}"` : ''}>
+    ${items.map((r, i) => `
+    <figure class="card review"${i >= show ? ' hidden' : ''}>
+      ${stars(r.stars)}
+      <blockquote>${para(r.text)}</blockquote>
+      <figcaption><strong>${md(r.name || '')}</strong>${meta(r) ? `<span>${meta(r)}</span>` : ''}</figcaption>
+    </figure>`).join('')}
+    ${items.length > show ? `<script>cruk.pickSome(document.currentScript.parentNode, ${show})</script>` : ''}
+  </div>
+  ${s.button ? `<div class="btn-row reviews-more">${button(s.button, 'blush')}</div>` : ''}
+</section>`;
+  },
+
+  map: (s) => {
+    const m = ctx.map;
+    const fill = (t) => md(t).replaceAll('{cities}', m.places.length).replaceAll('{countries}', m.countries.length);
+    const byCountry = m.countries.map((c) => `<li><strong>${esc(c)}:</strong> ${m.places.filter((p) => p.country === c).map((p) => esc(p.city)).join(', ')}</li>`);
+    return `
+<section id="map" class="container section">
+  <p class="eyebrow">${md(s.eyebrow)}</p>
+  <h2>${md(s.heading)}</h2>
+  ${s.intro ? `<p class="intro">${md(s.intro)}</p>` : ''}
+  <div class="map-wrap" data-map>
+    <svg class="world-map" viewBox="0 0 ${m.width} ${m.height}" role="img" aria-label="${esc(`World map: ${m.places.length} places in ${m.countries.length} countries. The full list is below the map.`)}">
+      <g class="land">${m.shapes.map((c) => `<path${c.visited ? ' class="visited"' : ''} d="${c.d}"/>`).join('')}</g>
+      <g class="pins">${m.places.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5" data-label="${esc(`${p.city}, ${p.country}`)}"/>`).join('')}</g>
+    </svg>
+    <div class="map-controls">
+      <button type="button" data-zoom="in" aria-label="${esc(s.zoomIn || 'Zoom in')}" title="${esc(s.zoomIn || 'Zoom in')}">+</button>
+      <button type="button" data-zoom="out" aria-label="${esc(s.zoomOut || 'Zoom out')}" title="${esc(s.zoomOut || 'Zoom out')}">−</button>
+      <button type="button" data-zoom="reset" aria-label="${esc(s.reset || 'Show the whole world')}" title="${esc(s.reset || 'Show the whole world')}">⟲</button>
+    </div>
+    <p class="map-tip" hidden></p>
+  </div>
+  ${s.summary ? `<p class="map-summary">${fill(s.summary)}</p>` : ''}
+  <details class="map-list">
+    <summary>${md(s.listLabel || 'See the list of places')}</summary>
+    <ul>${byCountry.join('')}</ul>
+  </details>
+  ${s.credit ? `<p class="map-credit">${md(s.credit)}</p>` : ''}
+</section>`;
+  },
 
   closing: (s) => `
 <section class="band-dark closing">
