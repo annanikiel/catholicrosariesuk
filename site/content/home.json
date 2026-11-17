@@ -4,7 +4,7 @@
     "description": "Handmade, wire-linked rosaries made in Manchester. Find the silence in your heart, in the busyness of daily life."
   },
 
-  "sectionOrder": ["hero", "mission", "newsletter", "make", "reviews", "beads", "medals", "map", "pray", "contact", "closing"],
+  "sectionOrder": ["hero", "mission", "newsletter", "make", "reviews", "map", "beads", "medals", "pray", "contact", "closing"],
 
   "hero": {
     "buttons": [
