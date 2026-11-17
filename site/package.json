@@ -1,0 +1,14 @@
+{
+  "name": "catholic-rosaries-site",
+  "private": true,
+  "type": "module",
+  "description": "Builds CatholicRosaries.uk from site/content/*.json",
+  "scripts": {
+    "build": "node build/build.mjs"
+  },
+  "devDependencies": {
+    "d3-geo": "3.1.1",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  }
+}

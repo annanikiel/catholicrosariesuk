@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "text": "[Paste a review from Etsy here. Copy one of these blocks to add more.]",
+      "name": "[First name]",
+      "stars": 5,
+      "product": "[Which rosary, optional]",
+      "date": "[Month and year, optional]"
+    },
+    {
+      "text": "[Paste a review from Etsy here.]",
+      "name": "[First name]",
+      "stars": 5,
+      "product": "",
+      "date": ""
+    },
+    {
+      "text": "[Paste a review from Etsy here.]",
+      "name": "[First name]",
+      "stars": 5,
+      "product": "",
+      "date": ""
+    },
+    {
+      "text": "[Paste a review from Etsy here.]",
+      "name": "[First name]",
+      "stars": 5,
+      "product": "",
+      "date": ""
+    }
+  ]
+}
