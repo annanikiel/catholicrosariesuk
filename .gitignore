@@ -5,3 +5,4 @@ samconfig.toml
 backend/packaged.yaml
 _site/
 site/node_modules/
+design-previews/

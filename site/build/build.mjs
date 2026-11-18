@@ -47,6 +47,26 @@ function attempt(where, fn) {
   }
 }
 
+// Themes: site.json "theme" picks one for everyone. Adding ?theme=linen (or chapel, or original) to any
+// page address previews another one in your own browser only, until you close the tab.
+const THEMES = ['original', 'linen', 'chapel'];
+function themeTags(theme) {
+  const chosen = THEMES.includes(theme) ? theme : 'original';
+  return `<script>
+(function () {
+  var themes = ${JSON.stringify(THEMES)}, chosen = ${JSON.stringify(chosen)}, t = chosen;
+  try {
+    var q = new URLSearchParams(location.search).get('theme');
+    if (themes.indexOf(q) >= 0) sessionStorage.setItem('cruk-theme', q);
+    var s = sessionStorage.getItem('cruk-theme');
+    if (themes.indexOf(s) >= 0) t = s;
+  } catch (e) {}
+  if (t !== 'original') document.write('<link rel="stylesheet" href="theme-' + t + '.css">');
+})();
+</script>
+<noscript>${chosen === 'original' ? '' : `<link rel="stylesheet" href="theme-${chosen}.css">`}</noscript>`;
+}
+
 function layout(site, { title, description, body, main = '', noindex = false, pagePath = '', base = '' }) {
   const canonical = site.siteUrl.replace(/\/+$/, '') + '/' + pagePath;
   const nav = site.nav.map((n) => `<a href="${href(n.href)}">${md(n.label)}</a>`).join('\n      ');
@@ -72,6 +92,7 @@ ${description ? `<meta property="og:description" content="${esc(description)}">\
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+${themeTags(site.theme)}
 <script>
 // Shows one random version of blocks that have several (see "variants" in content/home.json),
 // avoiding the one this visitor saw last time.

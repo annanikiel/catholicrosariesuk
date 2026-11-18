@@ -145,6 +145,8 @@ Every word on the website lives in the JSON files in [`site/content/`](site/cont
 - Dots that would overlap on screen merge into one bigger dot showing how many places it holds. Zooming in, or clicking the group, splits them apart, and the lines follow. A more detailed coastline loads automatically once someone zooms in.
 - If a place can't be found, the site still publishes without it, and the workflow run shows a yellow warning that names it and says why.
 
+**Changing the look:** `"theme"` at the top of `site.json` picks the design: `"original"` (pink), `"linen"` (warm neutrals) or `"chapel"` (white and sage). To try one without changing anything, add `?theme=linen` or `?theme=chapel` to the end of any page address. Only your browser tab sees it, and it stays for that tab as you click around. `?theme=original` switches back. The theme styles are in `site/static/theme-*.css`.
+
 **Moving or hiding sections:** change `sectionOrder` at the top of `home.json`. Take a name out to hide that section. The menu links are in `site.json`.
 
 **Adding a photo:**

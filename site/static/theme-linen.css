@@ -1,0 +1,68 @@
+/* Theme "Linen": warm neutrals, the logo's brown as the main colour, dusty rose as a quiet accent.
+   Loaded after styles.css when site.json has "theme": "linen". */
+:root {
+  --ground: #F8F5F0;
+  --surface: #FFFFFF;
+  --border: #E9E2D9;
+  --text: #4B403B;
+  --muted: #6F635C;
+  --rose: #B98A86;
+  --rose-deep: #8E5B5F;
+  --rose-light: #D9BDB6;
+  --blush: #EFE9E1;
+  --photo-bg: #F2EDE6;
+  --photo-border: #DDD3C8;
+}
+
+/* Fewer decorations */
+.bead, .dot { display: none; }
+.eyebrow { color: #8A7D74; font-size: 12.5px; letter-spacing: 0.16em; font-weight: 700; }
+h2 em, .hero h1 em { color: var(--rose-deep); }
+
+/* Buttons: one solid style, one outline */
+.btn-pink, .btn-dark { background: var(--ink); color: var(--ground); }
+.btn-pink:hover, .btn-dark:hover { background: #4A2A30; color: var(--ground); }
+.btn-blush { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px #CDBFB3; }
+.btn-blush:hover { background: var(--surface); color: var(--ink); }
+
+/* Hero */
+.halo { background: #EFE9E1; }
+
+/* Cards: no outlines, just white on linen */
+.card, .accordion { border: none; box-shadow: 0 1px 2px rgba(42, 11, 20, 0.04); }
+.card { border-radius: 20px; }
+.kind { color: #8A7D74 !important; }
+.steps li::before { background: #EFE9E1; }
+
+/* Mission band stays dark, in softer tones */
+.band-dark { color: #F1E9E3; }
+.band-dark .eyebrow { color: #C9B6AC; }
+.band-dark h2 em { color: #E3C9C3; }
+.band-dark .split-body { color: #E9E0DA; }
+.placeholder { color: #C9B6AC; }
+
+/* Closing band becomes light */
+.closing { background: #EFE9E1; color: var(--ink); }
+.closing p { color: var(--text); }
+.closing h2 em { color: var(--rose-deep); }
+.closing-logo { background: var(--surface); }
+
+.band-white { background: var(--surface); border-top: 1px solid var(--border); }
+.site-footer { color: #D9CFC8; }
+.site-footer a { color: #EADCD3; }
+
+/* Reviews and map */
+.card .stars { color: #B39466; }
+.card .stars .off { color: #E9E2D9; }
+.map-wrap { background: #EFE9E1; }
+.world-map .land path { fill: #E2D9CE; stroke: #F4EFE9; }
+.world-map .land path.visited { fill: #D1C2B4; }
+.world-map .pins circle, .world-map .pins circle.group { fill: var(--ink); }
+.world-map .routes path { stroke: var(--ink); stroke-opacity: 0.32; }
+.world-map .origin circle { fill: var(--rose-deep); stroke: #FFFFFF; }
+.map-list summary { color: var(--ink); }
+.map-credit { color: #9A8D84; }
+
+.form-success { background: #EFE9E1; }
+input:focus, textarea:focus { outline-color: #CDBFB3; }
+.closing-logo { width: 72px; height: 72px; padding: 12px; }
