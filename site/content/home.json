@@ -77,24 +77,24 @@
         "title": "Five-decade rosaries",
         "dot": "#8E4DB8",
         "text": "The traditional five-decade rosary, with a detailed centre medal and crucifix, for praying the mysteries in full.",
-        "photo": null,
-        "photoAlt": "",
+        "photo": "images/five-decade-rosary.webp",
+        "photoAlt": "Five-decade rosary with green and red marbled beads, a silver crucifix and a Miraculous Medal centre",
         "placeholder": "Photo: five-decade rosary"
       },
       {
         "title": "Car tenners",
         "dot": "#2F8A63",
         "text": "A single decade with a clasp, to hang from the mirror, attach to steering wheel or keep in the glovebox.",
-        "photo": null,
-        "photoAlt": "",
+        "photo": "images/car-tenner.webp",
+        "photoAlt": "Car tenner: a single decade of black beads with a clasp, a St Christopher medal and a silver crucifix",
         "placeholder": "Photo: one-decade car rosary"
       },
       {
         "title": "Keychains",
         "dot": "#E8788A",
         "text": "A few beads and a medal on a key ring, for your keys or the handle of a bag.",
-        "photo": null,
-        "photoAlt": "",
+        "photo": "images/keyring.webp",
+        "photoAlt": "Keyring with three blue-green stone beads and a Divine Mercy medal",
         "placeholder": "Photo: rosary keychain"
       }
     ]
@@ -104,15 +104,18 @@
     "eyebrow": "Reviews",
     "heading": "Kind words from *Etsy*",
     "show": 3,
-    "button": { "label": "Read all reviews on Etsy", "href": "{etsy}" }
+    "button": { "label": "Read all reviews on Etsy", "href": "https://www.etsy.com/uk/shop/CatholicRosariesUK?etsrc=sdt#reviews" }
   },
 
   "map": {
     "eyebrow": "Around the world",
+    "origin": { "city": "Manchester", "country": "United Kingdom", "label": "Manchester, where the rosaries are made" },
     "heading": "Where the rosaries *have gone*",
-    "intro": "Every dot is a town or city where one of my rosaries is now being prayed. Drag to move around, and use the buttons to zoom in.",
+    "intro": "Each line runs from Manchester, where the rosaries are made, to a town or city where one is now being prayed. Bigger dots hold several places: click one to zoom in, or drag to look around.",
     "summary": "So far: {cities} places in {countries} countries.",
     "listLabel": "See the list of places",
+    "clusterMore": "{names} and {count} more.",
+    "clusterHint": "Click to zoom in.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "reset": "Show the whole world",

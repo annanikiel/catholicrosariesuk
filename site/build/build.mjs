@@ -136,7 +136,7 @@ async function build() {
   const notFound = await readJson('not-found.json');
   ctx.site = site;
   ctx.reviews = await readJson('reviews.json');
-  ctx.map = await buildMap(await readJson('orders-map.json'));
+  ctx.map = await buildMap(await readJson('orders-map.json'), home.map?.origin);
   for (const w of ctx.map.warnings) {
     console.warn(`! ${w}`);
     if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Map place skipped::${w}`);
@@ -175,6 +175,8 @@ async function build() {
   await mkdir(outDir, { recursive: true });
   await cp(path.join(siteDir, 'static'), outDir, { recursive: true });
   for (const [name, html] of Object.entries(pages)) await writeFile(path.join(outDir, name), html);
+  // Detailed map outlines, fetched by the page only when the map is zoomed in.
+  await writeFile(path.join(outDir, 'map-detail.json'), JSON.stringify(ctx.map.detailShapes.map((s) => [s.d, s.visited ? 1 : 0])));
   console.log(`Built ${Object.keys(pages).length} pages into ${path.relative(process.cwd(), outDir) || outDir}`);
 }
 
