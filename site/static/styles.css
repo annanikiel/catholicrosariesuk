@@ -215,7 +215,10 @@ input:focus, textarea:focus { outline: 3px solid var(--rose); outline-offset: 1p
 .world-map .land path { fill: #F7D4DB; stroke: #FFF8F3; stroke-width: 0.6; vector-effect: non-scaling-stroke; }
 .world-map .land path.visited { fill: #EFA9B6; }
 .world-map .pins circle { fill: var(--rose-deep); stroke: #FFFFFF; stroke-width: 1.5; vector-effect: non-scaling-stroke; cursor: pointer; }
-.world-map .pins circle.active { fill: var(--ink); }
+.world-map .pins circle.group { fill: var(--rose-deep); }
+.world-map .pins text { fill: #FFFFFF; font-family: var(--sans); font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.world-map .routes path { fill: none; stroke: var(--rose-deep); stroke-opacity: 0.45; stroke-width: 1.25; stroke-linecap: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+.world-map .origin circle { fill: var(--ink); stroke: var(--rose); stroke-width: 3; vector-effect: non-scaling-stroke; cursor: pointer; }
 .map-controls { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: column; gap: 8px; }
 .map-controls button { width: 44px; height: 44px; border: none; border-radius: 50%; background: var(--surface); color: var(--ink); font: inherit; font-size: 22px; font-weight: 700; line-height: 1; cursor: pointer; box-shadow: 0 1px 4px rgba(42, 11, 20, 0.15); }
 .map-controls button:hover { background: var(--ground); }
@@ -225,6 +228,8 @@ input:focus, textarea:focus { outline: 3px solid var(--rose); outline-offset: 1p
   .map-controls button { width: 36px; height: 36px; font-size: 18px; }
 }
 .map-tip { position: absolute; transform: translate(-50%, calc(-100% - 12px)); background: var(--ink); color: var(--ground); font-size: 14px; font-weight: 700; padding: 6px 12px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
+.map-tip.flip { transform: translate(calc(-100% + 16px), calc(-100% - 12px)); }
+.map-tip.flip-left { transform: translate(-16px, calc(-100% - 12px)); }
 .map-tip[hidden] { display: none; }
 .map-summary { margin-top: 18px; color: var(--muted); }
 .map-list { margin-top: 8px; color: var(--muted); }

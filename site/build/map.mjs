@@ -1,9 +1,11 @@
 // Builds the "where my rosaries have gone" world map from content/orders-map.json.
 //
 // Each place only needs a city and a country. Coordinates are looked up in a bundled list of
-// ~34,000 cities (GeoNames, population over 15,000). For smaller places, add "lat" and "lng".
+// ~220,000 places (GeoNames: towns over 1,000 people worldwide, and every village in the UK and Ireland).
+// For anywhere it doesn't know, add "lat" and "lng".
 // The same city listed more than once becomes a single dot.
 import { readFile } from 'node:fs/promises';
+import { gunzipSync } from 'node:zlib';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,7 +46,7 @@ const MAP_NAME_FIXES = {
 let geo; // loaded once
 async function loadGeo() {
   if (geo) return geo;
-  const places = JSON.parse(await readFile(path.join(here, 'data', 'places.json'), 'utf8'));
+  const places = JSON.parse(gunzipSync(await readFile(path.join(here, 'data', 'places.json.gz'))).toString('utf8'));
   const countryByName = {};
   for (const [code, name] of Object.entries(places.countries)) {
     countryByName[norm(name)] = code;
@@ -53,12 +55,12 @@ async function loadGeo() {
   for (const [alias, code] of Object.entries(COUNTRY_ALIASES)) countryByName[alias] = code;
 
   const citiesByName = new Map();
-  for (const c of places.cities) {
-    const [name, ascii, cc, a1, lat, lng, pop] = c;
-    for (const key of new Set([norm(name), norm(ascii)])) {
+  // Rows are [name, [other names], country, region code, lat, lng], most important places first.
+  for (const [name, others, cc, a1, lat, lng] of places.cities) {
+    for (const key of new Set([name, ...others].map(norm))) {
       if (!key) continue;
       if (!citiesByName.has(key)) citiesByName.set(key, []);
-      citiesByName.get(key).push({ name, cc, a1, lat, lng, pop });
+      citiesByName.get(key).push({ name, cc, a1, lat, lng });
     }
   }
 
@@ -73,7 +75,16 @@ async function loadGeo() {
     const code = MAP_NAME_FIXES[name] || countryByName[norm(name)] || '';
     return { code, d: pathGen(f) || '' };
   });
-  geo = { places, countryByName, citiesByName, projection, height, shapes };
+  // A more detailed outline, loaded by the browser only when someone zooms in.
+  const topo50 = require('world-atlas/countries-50m.json');
+  const land50 = feature(topo50, topo50.objects.countries);
+  land50.features = land50.features.filter((f) => f.properties.name !== 'Antarctica');
+  const detailPath = geoPath(projection).digits(1);
+  const detailShapes = land50.features.map((f) => {
+    const name = f.properties.name;
+    return { code: MAP_NAME_FIXES[name] || countryByName[norm(name)] || '', d: detailPath(f) || '' };
+  });
+  geo = { places, countryByName, citiesByName, projection, height, shapes, detailShapes };
   return geo;
 }
 
@@ -104,13 +115,19 @@ function resolve(g, entry, index) {
         `e.g. "lat": 53.48, "lng": -2.24 (in Google Maps, right-click the place and click the numbers at the top to copy them).`,
     };
   }
-  const best = matches.reduce((a, b) => (b.pop > a.pop ? b : a)); // biggest place with that name
+  const best = matches[0]; // the list is in order of size, so this is the biggest place with that name
   return { city: entry.city.trim(), country, cc, lat: best.lat, lng: best.lng };
 }
 
-export async function buildMap(data) {
+export async function buildMap(data, originEntry) {
   const g = await loadGeo();
   const warnings = [];
+  let origin = null;
+  if (originEntry) {
+    const o = resolve(g, originEntry, -1);
+    if (o.warning) warnings.push(`The map's "origin" in home.json: ${o.warning.replace(/^[^:]*: /, '')}`);
+    else origin = { ...o, label: originEntry.label || o.city };
+  }
   const seen = new Map();
   (data.places || []).forEach((entry, i) => {
     const r = resolve(g, entry, i);
@@ -119,13 +136,15 @@ export async function buildMap(data) {
     if (!seen.has(key)) seen.set(key, r);
   });
   const places = [...seen.values()].sort((a, b) => a.country.localeCompare(b.country) || a.city.localeCompare(b.city));
-  for (const p of places) [p.x, p.y] = g.projection([p.lng, p.lat]).map((v) => Math.round(v * 10) / 10);
+  for (const p of [...places, ...(origin ? [origin] : [])]) [p.x, p.y] = g.projection([p.lng, p.lat]).map((v) => Math.round(v * 10) / 10);
   const visited = new Set(places.map((p) => p.cc));
   return {
     width: WIDTH,
     height: g.height,
     shapes: g.shapes.map((s) => ({ d: s.d, visited: visited.has(s.code) })),
+    detailShapes: g.detailShapes.map((s) => ({ d: s.d, visited: visited.has(s.code) })),
     places,
+    origin,
     countries: [...new Set(places.map((p) => p.country))],
     warnings,
   };

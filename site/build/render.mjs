@@ -249,8 +249,16 @@ export const sections = {
   <div class="map-wrap" data-map>
     <svg class="world-map" viewBox="0 0 ${m.width} ${m.height}" role="img" aria-label="${esc(`World map: ${m.places.length} places in ${m.countries.length} countries. The full list is below the map.`)}">
       <g class="land">${m.shapes.map((c) => `<path${c.visited ? ' class="visited"' : ''} d="${c.d}"/>`).join('')}</g>
-      <g class="pins">${m.places.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5" data-label="${esc(`${p.city}, ${p.country}`)}"/>`).join('')}</g>
+      <g class="routes"></g>
+      ${m.origin ? `<g class="origin"><circle cx="${m.origin.x}" cy="${m.origin.y}" r="6"><title>${esc(m.origin.label)}</title></circle></g>` : ''}
+      <g class="pins">${m.places.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5"><title>${esc(`${p.city}, ${p.country}`)}</title></circle>`).join('')}</g>
     </svg>
+    <script type="application/json" class="map-data">${JSON.stringify({
+      origin: m.origin ? { x: m.origin.x, y: m.origin.y, label: m.origin.label } : null,
+      places: m.places.map((p) => [p.x, p.y, `${p.city}, ${p.country}`]),
+      more: s.clusterMore || '{names} and {count} more',
+      zoomHint: s.clusterHint || 'Tap or click to zoom in.',
+    }).replace(/</g, '\\u003c')}</script>
     <div class="map-controls">
       <button type="button" data-zoom="in" aria-label="${esc(s.zoomIn || 'Zoom in')}" title="${esc(s.zoomIn || 'Zoom in')}">+</button>
       <button type="button" data-zoom="out" aria-label="${esc(s.zoomOut || 'Zoom out')}" title="${esc(s.zoomOut || 'Zoom out')}">−</button>

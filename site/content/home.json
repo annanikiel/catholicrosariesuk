@@ -104,15 +104,18 @@
     "eyebrow": "Reviews",
     "heading": "Kind words from *Etsy*",
     "show": 3,
-    "button": { "label": "Read all reviews on Etsy", "href": "{etsy}" }
+    "button": { "label": "Read all reviews on Etsy", "href": "https://www.etsy.com/uk/shop/CatholicRosariesUK?etsrc=sdt#reviews" }
   },
 
   "map": {
     "eyebrow": "Around the world",
+    "origin": { "city": "Manchester", "country": "United Kingdom", "label": "Manchester, where the rosaries are made" },
     "heading": "Where the rosaries *have gone*",
-    "intro": "Every dot is a town or city where one of my rosaries is now being prayed. Drag to move around, and use the buttons to zoom in.",
+    "intro": "Each line runs from Manchester, where the rosaries are made, to a town or city where one is now being prayed. Bigger dots hold several places: click one to zoom in, or drag to look around.",
     "summary": "So far: {cities} places in {countries} countries.",
     "listLabel": "See the list of places",
+    "clusterMore": "{names} and {count} more.",
+    "clusterHint": "Click to zoom in.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "reset": "Show the whole world",

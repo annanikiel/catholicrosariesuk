@@ -136,11 +136,13 @@ Every word on the website lives in the JSON files in [`site/content/`](site/cont
 { "city": "Melbourne", "country": "Australia" },
 ```
 
-- The build finds the coordinates itself from a list of about 34,000 towns and cities (all places with more than 15,000 people).
+- The build finds the coordinates itself from a list of about 220,000 places: every town over 1,000 people worldwide, and every village in the UK and Ireland.
 - If a city appears more than once, it's shown as one dot, so adding a line for every order is fine.
 - Use English country names. `UK`, `England`, `Scotland`, `USA` and so on all work.
 - If two places share a name, add the state or county, e.g. `{ "city": "Portland", "country": "USA", "region": "Maine" }`. Otherwise the bigger one is used.
 - For a small place the list doesn't know, add its coordinates: `{ "city": "Little Snoring", "country": "UK", "lat": 52.86, "lng": 0.91 }`. In Google Maps, right-click the place and click the numbers at the top of the menu to copy them.
+- Curved lines run from the `origin` in the `map` block of `home.json` (Manchester) to every dot.
+- Dots that would overlap on screen merge into one bigger dot showing how many places it holds. Zooming in, or clicking the group, splits them apart, and the lines follow. A more detailed coastline loads automatically once someone zooms in.
 - If a place can't be found, the site still publishes without it, and the workflow run shows a yellow warning that names it and says why.
 
 **Moving or hiding sections:** change `sectionOrder` at the top of `home.json`. Take a name out to hide that section. The menu links are in `site.json`.
