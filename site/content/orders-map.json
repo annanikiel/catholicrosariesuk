@@ -11,7 +11,7 @@
     { "city": "Upminster", "country": "United Kingdom" },
     { "city": "London", "country": "United Kingdom" },
     { "city": "Oban", "country": "United Kingdom" },
-    { "city": "Lismore", "country": "United Kingdom" },
+    { "city": "Lismore", "country": "United Kingdom", "lat": 56.53, "lng": -5.50 },
     { "city": "Alton", "country": "United Kingdom" },
     { "city": "Hawick", "country": "United Kingdom" },
     { "city": "Nitra", "country": "Slovakia" },
