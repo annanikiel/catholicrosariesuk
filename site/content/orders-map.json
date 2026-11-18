@@ -1,11 +1,32 @@
 {
   "places": [
-    { "city": "Manchester", "country": "United Kingdom" },
+    { "city": "Emsworth", "country": "United Kingdom" },
+    { "city": "Thurso", "country": "United Kingdom" },
+    { "city": "Westervoort", "country": "The Netherlands" },
+    { "city": "Rosenberg", "country": "USA" },
+    { "city": "Gloucester", "country": "United Kingdom" },
+    { "city": "Windlesham", "country": "United Kingdom" },
+    { "city": "Newry", "country": "United Kingdom" },
+    { "city": "Market Drayton", "country": "United Kingdom" },
+    { "city": "Upminster", "country": "United Kingdom" },
     { "city": "London", "country": "United Kingdom" },
-    { "city": "Dublin", "country": "Ireland" },
-    { "city": "Kraków", "country": "Poland" },
-    { "city": "Boston", "country": "USA", "region": "Massachusetts" },
-    { "city": "Melbourne", "country": "Australia" },
-    { "city": "Manchester", "country": "United Kingdom" }
+    { "city": "Oban", "country": "United Kingdom" },
+    { "city": "Lismore", "country": "United Kingdom" },
+    { "city": "Alton", "country": "United Kingdom" },
+    { "city": "Hawick", "country": "United Kingdom" },
+    { "city": "Nitra", "country": "Slovakia" },
+    { "city": "Knott End-on-Sea", "country": "United Kingdom" },
+    { "city": "Banbury", "country": "United Kingdom" },
+    { "city": "New Malden", "country": "United Kingdom" },
+    { "city": "Shillington", "country": "United Kingdom" },
+    { "city": "King's Lynn", "country": "United Kingdom" },
+    { "city": "Caldicot", "country": "United Kingdom" },
+    { "city": "Barnstaple", "country": "United Kingdom" },
+    { "city": "Newbridge", "country": "Ireland" },
+    { "city": "Middlesbrough", "country": "United Kingdom" },
+    { "city": "Livingston", "country": "United Kingdom" },
+    { "city": "Preston", "country": "Australia" },
+    { "city": "Prescot", "country": "United Kingdom" },
+    { "city": "Sheffield", "country": "United Kingdom" }
   ]
 }
