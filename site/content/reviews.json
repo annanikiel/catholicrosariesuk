@@ -1,32 +1,32 @@
 {
   "items": [
     {
-      "text": "[Paste a review from Etsy here. Copy one of these blocks to add more.]",
-      "name": "[First name]",
-      "stars": 5,
-      "product": "[Which rosary, optional]",
-      "date": "[Month and year, optional]"
-    },
-    {
-      "text": "[Paste a review from Etsy here.]",
-      "name": "[First name]",
+      "text": "Gorgeous rosary! I have bought a few rosaries from here and every one was beautiful. Very well made, very good quality. I highly recommend to every one!!",
+      "name": "Etsy buyer",
       "stars": 5,
       "product": "",
-      "date": ""
+      "date": "November 2026"
     },
     {
-      "text": "[Paste a review from Etsy here.]",
-      "name": "[First name]",
+      "text": "I am really impressed with this rosary. I never had a crucifix with both a triangle on top, and the Virgin Mary with a cup too. The little details of the center medal, the picture of my beloved santa Teresita, and the Paternoster beads make this a big beautiful labour of love.",
+      "name": "Carlos",
       "stars": 5,
       "product": "",
-      "date": ""
+      "date": "April 2026"
     },
     {
-      "text": "[Paste a review from Etsy here.]",
-      "name": "[First name]",
+      "text": "This was a gift for my eleven-year-old goddaughter, who was absolutely delighted to receive it. These are her words: I love that every bead has a different pattern and I love that it says something on the back of the cross and around Mary. I will keep it forever!",
+      "name": "Jude",
       "stars": 5,
       "product": "",
-      "date": ""
+      "date": "November 2026"
+    },
+    {
+      "text": "Beautiful rosary beads - so happy with them! Perfect size :)",
+      "name": "Anne",
+      "stars": 5,
+      "product": "",
+      "date": "October 2026"
     }
   ]
 }
